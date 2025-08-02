@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Guide to Textile Classification AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: A single-page application with a top navigation bar for smooth scrolling to thematic sections. This non-linear structure enhances usability by allowing users to jump directly to topics of interest (e.g., Challenges, Models, Datasets). The core of the app is an interactive model comparison tool where clicking on a chart element reveals detailed qualitative information, directly linking quantitative data to its context. This design prioritizes exploration and synthesis over the linear format of the original report, making complex information more digestible for both beginners and experts. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Model performance data (ResNet, ViT, Hybrid accuracies). Goal: Compare. Viz: Interactive Bar Chart (Chart.js). Interaction: Clicking a bar updates a side panel with the model's description, strengths, and weaknesses. Justification: This creates a powerful, direct link between quantitative performance and qualitative understanding.
+        - Report Info: Challenges of textile classification (Illumination, Deformation, etc.). Goal: Inform. Viz: Interactive Cards (HTML/CSS). Interaction: Hovering or clicking reveals descriptive text. Justification: Breaks down complex problems into digestible, visually engaging chunks.
+        - Report Info: Public datasets table. Goal: Organize. Viz: Dynamic Card Layout (HTML/CSS/JS). Interaction: A filter or search could be added, but for this version, it's a clean, readable card grid. Justification: More modern and scannable than a dense table.
+        - Report Info: Beginner's step-by-step guide. Goal: Inform/Guide. Viz: Accordion Component (HTML/JS). Interaction: Clicking a step expands to show details. Justification: Manages information density and provides a clear, progressive path for the user.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* warm neutral background */
+            color: #374151; /* dark gray text */
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #4F46E5; /* indigo accent */
+            border-bottom-color: #4F46E5;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        .section-fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .section-fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .model-button.active {
+            background-color: #4F46E5;
+            color: white;
+            transform: scale(1.05);
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-gray-800">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-gray-900">
+                Fabric<span class="text-indigo-600">AI</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#hero" class="nav-link font-medium pb-1">Home</a>
+                <a href="#challenges" class="nav-link font-medium pb-1">The Challenge</a>
+                <a href="#models" class="nav-link font-medium pb-1">Models</a>
+                <a href="#datasets" class="nav-link font-medium pb-1">Datasets</a>
+                <a href="#roadmap" class="nav-link font-medium pb-1">Roadmap</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-gray-800 focus:outline-none">
+                    <div class="w-6 h-0.5 bg-gray-800 mb-1.5"></div>
+                    <div class="w-6 h-0.5 bg-gray-800 mb-1.5"></div>
+                    <div class="w-6 h-0.5 bg-gray-800"></div>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#hero" class="block py-2 text-center nav-link">Home</a>
+            <a href="#challenges" class="block py-2 text-center nav-link">The Challenge</a>
+            <a href="#models" class="block py-2 text-center nav-link">Models</a>
+            <a href="#datasets" class="block py-2 text-center nav-link">Datasets</a>
+            <a href="#roadmap" class="block py-2 text-center nav-link">Roadmap</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="py-20 md:py-32 bg-white section-fade-in">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-900 leading-tight">Automating Textile Analysis with AI</h1>
+                <p class="mt-6 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">An interactive guide to the machine learning techniques transforming fabric identification, quality control, and recycling. Explore the challenges, models, and data driving the future of the textile industry.</p>
+                <a href="#challenges" class="mt-10 inline-block bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-indigo-700 transition-transform transform hover:scale-105">Begin Exploration</a>
+            </div>
+        </section>
+
+        <section id="challenges" class="py-20 section-fade-in">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold">The Computer Vision Challenge</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Classifying textiles from images is a complex, fine-grained recognition task. The appearance of fabric is highly sensitive to a variety of factors, making robust automation a significant scientific hurdle.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                        <div class="text-indigo-600 text-4xl mb-4">🎨</div>
+                        <h3 class="text-xl font-bold mb-2">Fine-Grained Similarity</h3>
+                        <p class="text-gray-600">Distinctions between fabric types can be incredibly subtle (e.g., two grades of cotton), while different materials can be engineered to look nearly identical (e.g., polyester mimicking silk).</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                        <div class="text-indigo-600 text-4xl mb-4">💡</div>
+                        <h3 class="text-xl font-bold mb-2">Illumination Variation</h3>
+                        <p class="text-gray-600">Changes in lighting direction, intensity, and color can dramatically alter a fabric's perceived texture and color, creating shadows and specular highlights that can confuse models.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                        <div class="text-indigo-600 text-4xl mb-4">〰️</div>
+                        <h3 class="text-xl font-bold mb-2">Deformation & Pose</h3>
+                        <p class="text-gray-600">Unlike rigid objects, fabrics wrinkle, fold, and stretch. These deformations introduce complex geometric distortions that a model must learn to ignore to identify the underlying material.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                        <div class="text-indigo-600 text-4xl mb-4">💾</div>
+                        <h3 class="text-xl font-bold mb-2">Data Scarcity</h3>
+                        <p class="text-gray-600">A critical bottleneck is the lack of large-scale, public datasets. Many are proprietary or captured in unrealistic lab conditions, making transfer learning and data augmentation essential.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="models" class="py-20 bg-white section-fade-in">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold">A Taxonomy of Modeling Approaches</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">From the foundational CNN to state-of-the-art hybrids, different model architectures offer unique strengths. Explore how they work and compare their performance on fabric classification tasks.</p>
+                </div>
+                <div class="flex flex-col lg:flex-row gap-8 items-start">
+                    <div class="w-full lg:w-1/2">
+                        <div class="chart-container">
+                            <canvas id="modelPerformanceChart"></canvas>
+                        </div>
+                        <div id="model-buttons" class="flex justify-center flex-wrap gap-3 mt-6">
+                            <button data-model="cnn" class="model-button text-sm font-medium py-2 px-4 rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-300">CNN (ResNet)</button>
+                            <button data-model="vit" class="model-button text-sm font-medium py-2 px-4 rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-300">Vision Transformer</button>
+                            <button data-model="hybrid" class="model-button text-sm font-medium py-2 px-4 rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-300 active">Hybrid CNN-ViT</button>
+                        </div>
+                    </div>
+                    <div id="model-details" class="w-full lg:w-1/2 bg-stone-50 p-8 rounded-xl border border-stone-200">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="datasets" class="py-20 section-fade-in">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold">The Data Landscape</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">High-quality data is the fuel for any machine learning model. Explore some of the key public datasets available for training and validating textile classification systems.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="dataset-grid">
+                </div>
+            </div>
+        </section>
+
+        <section id="roadmap" class="py-20 bg-white section-fade-in">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold">A Beginner's Roadmap</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Follow this step-by-step guide to start your journey in textile classification. Each step provides a clear action and rationale, from setting up your environment to making your first prediction.</p>
+                </div>
+                <div class="max-w-3xl mx-auto" id="accordion-container">
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 FabricAI Interactive Guide. All rights reserved.</p>
+            <p class="text-sm text-gray-400 mt-2">This application is an interactive synthesis of the research report "A Comprehensive Guide to Textile Material Classification Using Machine Learning and Computer Vision".</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modelDetailsData = {
+                cnn: {
+                    title: 'CNN (e.g., ResNet)',
+                    diagram: `
+                        <div class="border border-gray-300 rounded-lg p-4 space-y-2 text-center bg-white shadow-inner">
+                            <div class="font-mono text-sm">Input Image</div>
+                            <div class="font-bold text-2xl">↓</div>
+                            <div class="bg-blue-100 text-blue-800 rounded p-2">Conv + Pool Layers</div>
+                            <div class="font-mono text-xs">(Local Feature Extraction)</div>
+                            <div class="font-bold text-2xl">↓</div>
+                            <div class="bg-blue-100 text-blue-800 rounded p-2">Conv + Pool Layers</div>
+                            <div class="font-bold text-2xl">↓</div>
+                            <div class="bg-green-100 text-green-800 rounded p-2">Fully Connected Layers</div>
+                            <div class="font-mono text-xs">(Classification)</div>
+                            <div class="font-bold text-2xl">↓</div>
+                            <div class="font-mono text-sm">Output (e.g., 'Cotton')</div>
+                        </div>
+                    `,
+                    description: 'Convolutional Neural Networks are the traditional workhorse of image classification. They use learnable filters to scan an image and hierarchically extract features, from simple edges in early layers to complex textures and patterns in deeper layers.',
+                    strengths: 'Excellent at learning fine-grained local textures and spatial hierarchies. Transfer learning with pre-trained models like ResNet is highly effective and data-efficient.',
+                    weaknesses: 'Can be distracted by localized noise like wrinkles or stains. The inherently local receptive field may struggle to capture global context across the entire image.'
+                },
+                vit: {
+                    title: 'Vision Transformer (ViT)',
+                    diagram: `
+                        <div class="border border-gray-300 rounded-lg p-4 space-y-2 text-center bg-white shadow-inner">
+                            <div class="font-mono text-sm">Input Image</div>
+                            <div class="font-bold text-2xl">↓</div>
+                            <div class="font-mono text-xs">Split into Patches</div>
+                            <div class="grid grid-cols-3 gap-1 p-2">
+                                <div class="bg-gray-200 h-6 w-6"></div><div class="bg-gray-200 h-6 w-6"></div><div class="bg-gray-200 h-6 w-6"></div>
+                                <div class="bg-gray-200 h-6 w-6"></div><div class="bg-gray-200 h-6 w-6"></div><div class="bg-gray-200 h-6 w-6"></div>
+                                <div class="bg-gray-200 h-6 w-6"></div><div class="bg-gray-200 h-6 w-6"></div><div class="bg-gray-200 h-6 w-6"></div>
+                            </div>
+                            <div class="font-bold text-2xl">↓</div>
+                            <div class="bg-purple-100 text-purple-800 rounded p-2">Transformer Encoder</div>
+                            <div class="font-mono text-xs">(Global Self-Attention)</div>
+                            <div class="font-bold text-2xl">↓</div>
+                            <div class="font-mono text-sm">Output (e.g., 'Wool')</div>
+                        </div>
+                    `,
+                    description: 'Inspired by NLP models, ViTs treat an image as a sequence of patches. A self-attention mechanism allows the model to weigh the importance of every patch relative to all others, capturing global context in a single step.',
+                    strengths: 'Excellent at modeling long-range dependencies. Highly robust to occlusion, deformation, and texture-based adversarial attacks due to its global perspective.',
+                    weaknesses: 'Requires very large datasets to train from scratch. Can be less effective than CNNs at capturing very fine, high-frequency local texture details.'
+                },
+                hybrid: {
+                    title: 'Hybrid CNN-ViT',
+                    diagram: `
+                         <div class="border border-gray-300 rounded-lg p-4 space-y-2 text-center bg-white shadow-inner">
+                            <div class="font-mono text-sm">Input Image</div>
+                            <div class="font-bold text-2xl">↓</div>
+                            <div class="bg-blue-100 text-blue-800 rounded p-2">CNN Backbone (ResNet)</div>
+                            <div class="font-mono text-xs">(Rich Local Feature Extraction)</div>
+                            <div class="font-bold text-2xl">↓</div>
+                            <div class="font-mono text-sm">Feature Maps</div>
+                            <div class="font-bold text-2xl">↓</div>
+                            <div class="bg-purple-100 text-purple-800 rounded p-2">Transformer Encoder</div>
+                            <div class="font-mono text-xs">(Global Context Modeling)</div>
+                            <div class="font-bold text-2xl">↓</div>
+                            <div class="font-mono text-sm">Output (e.g., 'Polyester')</div>
+                        </div>
+                    `,
+                    description: 'This state-of-the-art approach combines the best of both worlds. A CNN is used as a powerful feature extractor to capture rich local details, and these features are then fed into a Transformer to model the global relationships between them.',
+                    strengths: 'Achieves superior accuracy by synthesizing detailed local analysis with robust global context. The current leading architecture for demanding classification tasks.',
+                    weaknesses: 'More complex to implement and computationally more intensive than using a single architecture.'
+                }
+            };
+
+            const datasetsData = [
+                { name: "TextileNet", task: "Material ID", count: "760,949", scope: "33 fiber, 27 fabric labels. The most comprehensive, taxonomy-based dataset.", highlight: "🏆 Gold Standard" },
+                { name: "The Fabrics Dataset", task: "Material ID", count: "~2,000", scope: "Real-world fabrics (cotton, polyester, etc.) under 4 different lighting conditions.", highlight: "🌍 Real-World" },
+                { name: "CottonFabricImageBD", task: "Recycling", count: "27,300+", scope: "13 classes based on cotton percentage (e.g., 30%, 53%, 95%).", highlight: "♻️ Sustainability" },
+                { name: "StitchingNet", task: "Defect Detection", count: "14,565", scope: "11 fabric types, 10 sewing defect classes (e.g., skipped stitch).", highlight: "🧵 Sewing Defects" },
+                { name: "Lusitano Fabric", task: "Defect Detection", count: "34,000+", scope: "High-resolution images of real-world defects from a textile company.", highlight: "🏭 Industrial Grade" },
+                { name: "Roboflow Universe", task: "Various", count: "Varies", scope: "A platform hosting many smaller, user-contributed datasets for various tasks.", highlight: "🧑‍🤝‍🧑 Community Driven" }
+            ];
+
+            const roadmapData = [
+                { title: "Step 1: Setup Your Environment", content: "Install Python and use a virtual environment (like `conda` or `venv`). Install core libraries: `tensorflow` (or `pytorch`), `opencv-python`, `pandas`, and `scikit-learn`. A clean environment prevents dependency conflicts." },
+                { title: "Step 2: Acquire and Prepare Data", content: "Choose a suitable dataset (e.g., the OCT Fabric Dataset for beginners). Organize it into class-based directories. Write code to load images, resize them to a consistent size (e.g., 128x128), normalize pixel values to be between 0 and 1, and split the data into training and validation sets." },
+                { title: "Step 3: Implement Data Augmentation", content: "This is a mandatory step. Use Keras layers (`RandomFlip`, `RandomRotation`) or libraries like `Albumentations` to artificially expand your dataset. This makes your model more robust to real-world variations and helps prevent overfitting." },
+                { title: "Step 4: Build and Train the Model", content: "Start with a proven architecture via transfer learning (e.g., `tf.keras.applications.ResNet50`). Freeze the base layers and add your own classification head. Compile the model with an optimizer (`adam`), a loss function (`SparseCategoricalCrossentropy`), and metrics (`accuracy`). Train the model using the `.fit()` method." },
+                { title: "Step 5: Evaluate and Predict", content: "After training, plot the training and validation accuracy/loss to check for overfitting. Evaluate the final model on your validation or a separate test set. Use the trained model (`.predict()`) to classify new, unseen fabric images." }
+            ];
+
+            const modelDetailsContainer = document.getElementById('model-details');
+            const modelButtons = document.querySelectorAll('.model-button');
+
+            function updateModelDetails(modelKey) {
+                const data = modelDetailsData[modelKey];
+                modelDetailsContainer.innerHTML = `
+                    <h3 class="text-2xl font-bold mb-4">${data.title}</h3>
+                    <div class="mb-6">${data.diagram}</div>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">Core Principle:</h4>
+                    <p class="text-gray-600 mb-4">${data.description}</p>
+                    <h4 class="text-lg font-semibold mb-2">Strengths:</h4>
+                    <p class="text-gray-600 mb-4">${data.strengths}</p>
+                    <h4 class="text-lg font-semibold mb-2">Weaknesses:</h4>
+                    <p class="text-gray-600">${data.weaknesses}</p>
+                `;
+                modelButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.model === modelKey);
+                });
+            }
+
+            const ctx = document.getElementById('modelPerformanceChart').getContext('2d');
+            const modelChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['CNN (ResNet)', 'Vision Transformer', 'Hybrid CNN-ViT'],
+                    datasets: [{
+                        label: 'Classification Accuracy',
+                        data: [93.4, 96.5, 98.5],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.6)', // blue
+                            'rgba(139, 92, 246, 0.6)', // purple
+                            'rgba(79, 70, 229, 0.6)'  // indigo
+                        ],
+                        borderColor: [
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(139, 92, 246, 1)',
+                            'rgba(79, 70, 229, 1)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 8,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 90,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Accuracy (%)',
+                                font: { size: 14 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true,
+                            callbacks: {
+                                label: function(context) {
+                                    return `Accuracy: ${context.raw.toFixed(2)}%`;
+                                }
+                            }
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const modelKey = ['cnn', 'vit', 'hybrid'][index];
+                            updateModelDetails(modelKey);
+                        }
+                    }
+                }
+            });
+
+            modelButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    updateModelDetails(button.dataset.model);
+                });
+            });
+
+            updateModelDetails('hybrid');
+
+            const datasetGrid = document.getElementById('dataset-grid');
+            datasetsData.forEach(ds => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300';
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold">${ds.name}</h3>
+                        <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">${ds.highlight}</span>
+                    </div>
+                    <p class="text-gray-600 mb-1"><span class="font-semibold">Task:</span> ${ds.task}</p>
+                    <p class="text-gray-600 mb-1"><span class="font-semibold">Images:</span> ${ds.count}</p>
+                    <p class="text-gray-600"><span class="font-semibold">Scope:</span> ${ds.scope}</p>
+                `;
+                datasetGrid.appendChild(card);
+            });
+
+            const accordionContainer = document.getElementById('accordion-container');
+            roadmapData.forEach((item, index) => {
+                const accordionItem = document.createElement('div');
+                accordionItem.className = 'border-b border-gray-200';
+                accordionItem.innerHTML = `
+                    <button class="accordion-button w-full text-left py-5 px-6 flex justify-between items-center focus:outline-none">
+                        <span class="text-lg font-semibold">${item.title}</span>
+                        <span class="accordion-icon text-2xl text-indigo-600 transform transition-transform duration-300">+</span>
+                    </button>
+                    <div class="accordion-content px-6 pb-5">
+                        <p class="text-gray-600">${item.content}</p>
+                    </div>
+                `;
+                accordionContainer.appendChild(accordionItem);
+            });
+
+            accordionContainer.addEventListener('click', (e) => {
+                const button = e.target.closest('.accordion-button');
+                if (button) {
+                    const content = button.nextElementSibling;
+                    const icon = button.querySelector('.accordion-icon');
+                    
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        icon.textContent = '+';
+                        icon.classList.remove('rotate-45');
+                    } else {
+                        document.querySelectorAll('.accordion-content').forEach(el => el.style.maxHeight = null);
+                        document.querySelectorAll('.accordion-icon').forEach(el => { el.textContent = '+'; el.classList.remove('rotate-45'); });
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        icon.textContent = '+';
+                        icon.classList.add('rotate-45');
+                    }
+                }
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.section-fade-in').forEach(section => {
+                observer.observe(section);
+            });
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+
+            const navObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            sections.forEach(section => navObserver.observe(section));
+
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            mobileMenu.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
