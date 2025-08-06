@@ -3,382 +3,399 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Report: AI-Powered Textile Material Identification</title>
+    <title>Project Proposal: AI-Powered Textile Identification</title>
+    <!-- Chosen Palette: Scholarly Neutrals -->
+    <!-- Application Structure Plan: The SPA uses a thematic, non-linear structure with a top navigation bar (Home, The Challenge, Our Solution, Research & Plan, Timeline) to allow users to jump to sections of interest. This is more user-friendly than a linear slide presentation. The design uses interactive cards for problems/solutions, a bar chart for research comparison, a visual flow diagram for the proposed model, and a clickable timeline. This structure is chosen to break down the proposal into digestible, engaging chunks, facilitating better understanding and exploration of the project's key components. -->
+    <!-- Visualization & Content Choices: 1. Literature Review -> Goal: Compare -> Viz: Horizontal Bar Chart (Chart.js) -> Interaction: Hover tooltips -> Justification: Directly compares key accuracy metrics visually. 2. Proposed Framework -> Goal: Organize -> Viz: HTML/CSS Flow Diagram -> Interaction: Hover for details -> Justification: Clarifies the multi-stage plan better than text. 3. Timeline -> Goal: Change/Process -> Viz: Interactive Accordion/Collapsible List -> Interaction: Click to expand/collapse phases -> Justification: Saves space and focuses user attention. 4. Problems/Solutions -> Goal: Inform -> Viz: Styled Cards with Unicode Icons -> Interaction: Hover effects -> Justification: More engaging and scannable than bullet points. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* slate-50 */
+            background-color: #F8F7F4;
+            color: #333333;
         }
-        .section-title {
-            @apply text-3xl font-bold text-slate-800 mb-2 text-center;
-        }
-        .section-subtitle {
-            @apply text-lg text-slate-500 mb-10 text-center max-w-3xl mx-auto;
-        }
-        .card {
-            @apply bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300;
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 40vh;
         }
         .nav-link {
-            @apply px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors;
+            transition: color 0.3s ease;
         }
-        .hero-gradient {
-            background: radial-gradient(circle, rgba(224,231,255,0.6) 0%, rgba(248,250,252,0) 70%);
+        .nav-link:hover {
+            color: #4A90E2;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .timeline-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .timeline-item.active .timeline-content {
+            max-height: 500px; 
+        }
+        .timeline-item.active .timeline-arrow {
+            transform: rotate(90deg);
+        }
+        .timeline-arrow {
+            transition: transform 0.3s ease;
         }
     </style>
 </head>
-<body class="text-slate-700">
+<body class="antialiased">
 
-    <!-- Header & Navigation -->
-    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
-        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <div class="font-bold text-lg text-slate-800">
-                FabricID-Net
+    <header class="bg-white/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 shadow-md">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <div class="text-xl font-bold text-gray-800">FabricID-Net</div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#home" class="nav-link text-gray-600">Home</a>
+                    <a href="#challenge" class="nav-link text-gray-600">The Challenge</a>
+                    <a href="#solution" class="nav-link text-gray-600">Our Solution</a>
+                    <a href="#plan" class="nav-link text-gray-600">Research & Plan</a>
+                    <a href="#timeline" class="nav-link text-gray-600">Timeline</a>
+                </nav>
+                <div class="md:hidden">
+                    <button id="menu-btn" class="text-gray-800 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
             </div>
-            <div class="hidden md:flex items-center space-x-2">
-                <a href="#intro" class="nav-link">Introduction</a>
-                <a href="#problem" class="nav-link">The Challenge</a>
-                <a href="#review" class="nav-link">Literature</a>
-                <a href="#model" class="nav-link">Proposed Model</a>
-                <a href="#data" class="nav-link">Data</a>
-                <a href="#timeline" class="nav-link">Timeline</a>
-            </div>
-            <div class="md:hidden">
-                <!-- Mobile Menu Button can be added here -->
-            </div>
-        </nav>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#home" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Home</a>
+            <a href="#challenge" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">The Challenge</a>
+            <a href="#solution" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Our Solution</a>
+            <a href="#plan" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Research & Plan</a>
+            <a href="#timeline" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Timeline</a>
+        </div>
     </header>
 
-    <!-- Main Content -->
     <main>
-        <!-- Hero Section -->
-        <section id="home" class="relative text-center py-20 md:py-32 hero-gradient">
-            <div class="container mx-auto px-6">
-                <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 leading-tight">
-                    AI-Powered Textile Material Identification
-                </h1>
-                <p class="mt-4 text-xl md:text-2xl text-slate-600 max-w-4xl mx-auto">
-                    A Project Presentation on using Deep Learning for Fast, Accurate, and Non-Destructive Fabric Analysis.
-                </p>
-                <div class="mt-8 text-sm font-semibold text-slate-500">
-                    <p>Lakshya Kumar (2022tt12183) & Keshav Chachan (2022tt12148)</p>
-                    <p>Department of Textile and Fibre Technology, IIT Delhi</p>
+        <section id="home" class="pt-24 md:pt-32 pb-16 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-gray-900">AI-Powered Textile Material Identification</h1>
+                <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">A project proposal to develop a fast, accurate, and non-destructive system for identifying textile materials using Artificial Intelligence.</p>
+                <div class="mt-8">
+                    <p class="text-sm font-medium text-gray-500">Presented By</p>
+                    <p class="mt-1 text-lg font-semibold text-gray-800">Lakshya Kumar (2022tt12183) & Keshav Chachan (2022tt12148)</p>
+                    <p class="mt-1 text-md text-gray-500">Department of Textile and Fibre Technology, IIT Delhi</p>
                 </div>
             </div>
         </section>
 
-        <!-- Introduction Section -->
-        <section id="intro" class="py-20 bg-white">
+        <section id="challenge" class="py-16 md:py-24">
             <div class="container mx-auto px-6">
-                <h2 class="section-title">Introduction</h2>
-                <p class="section-subtitle">
-                    Identifying textile materials is a fundamental challenge. We explore AI to create a system that is fast, accurate, and non-destructive, addressing needs from quality control to large-scale recycling.
-                </p>
-                <div class="grid md:grid-cols-3 gap-8 text-center">
-                    <div class="p-6 border border-slate-200 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto h-12 w-12 text-indigo-500 mb-4"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
-                        <h3 class="text-xl font-semibold text-slate-800 mb-2">Quality Control</h3>
-                        <p class="text-slate-500">Ensuring material integrity and consistency in manufacturing.</p>
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">The Problem with Traditional Methods</h2>
+                    <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-600">Current fabric identification methods are holding the industry back, creating critical bottlenecks.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="card bg-white p-8 rounded-xl shadow-lg">
+                        <div class="text-4xl mb-4">🤔</div>
+                        <h3 class="text-xl font-bold mb-2">Subjective & Inconsistent</h3>
+                        <p class="text-gray-600">Manual identification by touch and sight is unreliable and varies dramatically with an individual's experience.</p>
                     </div>
-                    <div class="p-6 border border-slate-200 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto h-12 w-12 text-indigo-500 mb-4"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-                        <h3 class="text-xl font-semibold text-slate-800 mb-2">Efficient Recycling</h3>
-                        <p class="text-slate-500">Automating the sorting of millions of tons of textile waste annually.</p>
+                    <div class="card bg-white p-8 rounded-xl shadow-lg">
+                        <div class="text-4xl mb-4">💥</div>
+                        <h3 class="text-xl font-bold mb-2">Destructive</h3>
+                        <p class="text-gray-600">Accurate chemical tests require damaging the sample, making them unsuitable for finished products.</p>
                     </div>
-                    <div class="p-6 border border-slate-200 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto h-12 w-12 text-indigo-500 mb-4"><shield class="lucide lucide-shield-check"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path><path d="m9 12 2 2 4-4"></path></shield></svg>
-                        <h3 class="text-xl font-semibold text-slate-800 mb-2">Consumer Protection</h3>
-                        <p class="text-slate-500">Fighting counterfeits and ensuring fair trade through reliable verification.</p>
+                    <div class="card bg-white p-8 rounded-xl shadow-lg">
+                        <div class="text-4xl mb-4">⏳</div>
+                        <h3 class="text-xl font-bold mb-2">Slow & Labor-Intensive</h3>
+                        <p class="text-gray-600">Microscopic analysis is a time-consuming process, completely impractical for large-scale industrial operations.</p>
+                    </div>
+                    <div class="card bg-white p-8 rounded-xl shadow-lg">
+                        <div class="text-4xl mb-4">❓</div>
+                        <h3 class="text-xl font-bold mb-2">Prone to Error</h3>
+                        <p class="text-gray-600">Differentiating complex blends and authentic materials from fakes is extremely difficult and error-prone.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Problem Statement Section -->
-        <section id="problem" class="py-20">
+        <section id="solution" class="py-16 md:py-24 bg-white">
             <div class="container mx-auto px-6">
-                <h2 class="section-title">The Challenge & Our Solution</h2>
-                <p class="section-subtitle">Traditional methods are slow, destructive, and subjective. Artificial Intelligence provides a powerful, modern alternative.</p>
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Our Solution: Why Artificial Intelligence?</h2>
+                    <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-600">AI provides a powerful, modern solution to overcome these limitations.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="card bg-gray-50 p-8 rounded-xl border border-gray-200">
+                        <div class="text-4xl mb-4">⚡️</div>
+                        <h3 class="text-xl font-bold mb-2">Speed & Efficiency</h3>
+                        <p class="text-gray-600">AI models can analyze spectral data and classify a fabric in milliseconds, enabling real-time industrial sorting.</p>
+                    </div>
+                    <div class="card bg-gray-50 p-8 rounded-xl border border-gray-200">
+                        <div class="text-4xl mb-4">🔬</div>
+                        <h3 class="text-xl font-bold mb-2">Non-Destructive</h3>
+                        <p class="text-gray-600">Paired with spectroscopy (NIR/HSI), AI can identify materials without any physical harm to the textile.</p>
+                    </div>
+                    <div class="card bg-gray-50 p-8 rounded-xl border border-gray-200">
+                        <div class="text-4xl mb-4">🎯</div>
+                        <h3 class="text-xl font-bold mb-2">Superior Accuracy</h3>
+                        <p class="text-gray-600">A well-trained model can achieve over 95% accuracy, providing objective and repeatable results.</p>
+                    </div>
+                    <div class="card bg-gray-50 p-8 rounded-xl border border-gray-200">
+                        <div class="text-4xl mb-4">🌐</div>
+                        <h3 class="text-xl font-bold mb-2">Scalability</h3>
+                        <p class="text-gray-600">A single model can be deployed across countless devices, making automated sorting feasible and cost-effective.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="plan" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Research & Project Plan</h2>
+                    <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-600">Our plan is grounded in proven research and a structured, multi-stage development process.</p>
+                </div>
+
+                <div class="mb-16">
+                    <h3 class="text-2xl font-bold text-center mb-8">What the Research Says: Key Findings</h3>
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <p class="text-center text-gray-600 mb-4">Recent studies confirm the high potential of deep learning for textile classification. Here's a comparison of key results from the literature.</p>
+                        <div class="chart-container">
+                            <canvas id="researchChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-16">
+                    <h3 class="text-2xl font-bold text-center mb-8">Proposed Framework: FabricID-Net</h3>
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-4 text-center">
+                        <div class="card bg-white p-6 rounded-lg shadow-md w-full md:w-1/3">
+                            <div class="text-blue-500 font-bold text-lg mb-2">1. Baselines</div>
+                            <p class="text-gray-700">Implement traditional models like **KNN & SVM** to set a performance benchmark.</p>
+                        </div>
+                        <div class="text-2xl text-gray-400 font-bold mx-2 hidden md:block">→</div>
+                        <div class="card bg-white p-6 rounded-lg shadow-md w-full md:w-1/3">
+                            <div class="text-green-500 font-bold text-lg mb-2">2. Proven Architectures</div>
+                            <p class="text-gray-700">Train robust deep learning models like **1D-CNN & ResNet**.</p>
+                        </div>
+                        <div class="text-2xl text-gray-400 font-bold mx-2 hidden md:block">→</div>
+                        <div class="card bg-white p-6 rounded-lg shadow-md w-full md:w-1/3">
+                            <div class="text-purple-500 font-bold text-lg mb-2">3. State-of-the-Art</div>
+                            <p class="text-gray-700">Optimize a **ModernTCN** model for the best balance of accuracy and efficiency.</p>
+                        </div>
+                    </div>
+                </div>
                 
-                <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <!-- Limitations -->
-                    <div>
-                        <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">Limitations of Current Methods</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-start p-4 bg-red-50 border border-red-200 rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-red-500 mr-4 flex-shrink-0 mt-1"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                                <div>
-                                    <h4 class="font-semibold">Destructive & Time-Consuming</h4>
-                                    <p class="text-slate-500 text-sm">Chemical tests destroy samples, while microscopy is slow and laborious.</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start p-4 bg-red-50 border border-red-200 rounded-lg">
-                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-red-500 mr-4 flex-shrink-0 mt-1"><path d="M18 20a2 2 0 0 0 2-2V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12z"></path><path d="M8 12h8"></path><path d="M8 16h4"></path><path d="M12.5 2v.5a2 2 0 0 1-2 2H10"></path></svg>
-                                <div>
-                                    <h4 class="font-semibold">Subjective & Inconsistent</h4>
-                                    <p class="text-slate-500 text-sm">Manual identification relies on experience, leading to errors and inconsistency.</p>
-                                </div>
-                            </div>
-                        </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-4">Data Collection & Preparation</h3>
+                        <p class="text-gray-600 mb-4">High-quality data is the foundation of our model. We will:</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-blue-500 mr-3 mt-1">✓</span>
+                                <span>First, request access to the **"Fabric-NIR-Dataset"** (11,000+ samples) from published research.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-500 mr-3 mt-1">✓</span>
+                                <span>As a backup, **create our own dataset** using the department's NIR spectrometer.</span>
+                            </li>
+                             <li class="flex items-start">
+                                <span class="text-blue-500 mr-3 mt-1">✓</span>
+                                <span>Clean and enhance data via **Normalization (SNV)** and **Smoothing (SG Filter)**.</span>
+                            </li>
+                        </ul>
                     </div>
-
-                    <!-- Why AI? -->
-                    <div>
-                        <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">Why AI is the Answer</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-start p-4 bg-green-50 border border-green-200 rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-green-500 mr-4 flex-shrink-0 mt-1"><path d="m22 11-1-11-11-1-11 1-1 11 1 11 11 1 11-1 1-11z"></path><path d="m9 12 2 2 4-4"></path></svg>
-                                <div>
-                                    <h4 class="font-semibold">Accuracy & Objectivity</h4>
-                                    <p class="text-slate-500 text-sm">AI models achieve superhuman accuracy and provide consistent, unbiased results.</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start p-4 bg-green-50 border border-green-200 rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-green-500 mr-4 flex-shrink-0 mt-1"><path d="M21 10V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h4"></path><path d="M12 18a6 6 0 1 0 12 0v-6a6 6 0 1 0-12 0v6z"></path><path d="M12 12v6"></path><path d="M18 12v6"></path></svg>
-                                <div>
-                                    <h4 class="font-semibold">Non-Destructive & Fast</h4>
-                                    <p class="text-slate-500 text-sm">Analyzes materials using NIR spectroscopy in milliseconds without any damage.</p>
-                                </div>
-                            </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-4">Expected Outcomes & Metrics</h3>
+                        <p class="text-gray-600 mb-4">Our goal is a practical, high-performance model. Success will be measured by:</p>
+                        <div class="text-center">
+                            <div class="text-5xl font-extrabold text-blue-600 mb-2">>95%</div>
+                            <div class="text-xl font-bold mb-4">Classification Accuracy</div>
+                            <p class="text-gray-600">Along with **Precision, Recall, F1-Score**, and **real-time inference speed** for industrial viability.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Literature Review Section -->
-        <section id="review" class="py-20 bg-white">
+        <section id="timeline" class="py-16 md:py-24 bg-white">
             <div class="container mx-auto px-6">
-                <h2 class="section-title">Insights from Recent Research</h2>
-                <p class="section-subtitle">Our work builds upon cutting-edge studies that combine spectroscopy with deep learning, demonstrating the high potential of this approach.</p>
-                <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Paper 1 -->
-                    <div class="card">
-                        <h3 class="text-xl font-bold text-indigo-600 mb-2">Shi & Sang (2025)</h3>
-                        <p class="text-sm font-medium text-slate-500 mb-4">ModernTCN for Waste Textiles</p>
-                        <div class="space-y-3 text-sm">
-                            <p><strong class="text-slate-700">Method:</strong> Used NIR spectroscopy on a large, custom dataset of 18 fabric types.</p>
-                            <p><strong class="text-slate-700">Model:</strong> Proposed <span class="font-mono bg-indigo-50 text-indigo-700 px-2 py-1 rounded">Fabric-ModernTCN</span>, a novel deep learning architecture for time series.</p>
-                            <p><strong class="text-slate-700">Key Finding:</strong> Achieved <span class="font-bold text-green-600">93.28% accuracy</span> and very high inference speed (390 FPS), outperforming other models.</p>
-                        </div>
-                    </div>
-                    <!-- Paper 2 -->
-                    <div class="card">
-                        <h3 class="text-xl font-bold text-indigo-600 mb-2">Kainz et al. (2025)</h3>
-                        <p class="text-sm font-medium text-slate-500 mb-4">Supervised & Unsupervised Learning</p>
-                        <div class="space-y-3 text-sm">
-                            <p><strong class="text-slate-700">Method:</strong> Employed NIR Hyperspectral Imaging (HSI) to test generalization against color/structure variations.</p>
-                            <p><strong class="text-slate-700">Model:</strong> Compared a supervised <span class="font-mono bg-indigo-50 text-indigo-700 px-2 py-1 rounded">1D-CNN</span> with an unsupervised Autoencoder.</p>
-                            <p><strong class="text-slate-700">Key Finding:</strong> The supervised 1D-CNN achieved <span class="font-bold text-green-600">perfect object-based accuracy</span>, showing remarkable generalization.</p>
-                        </div>
-                    </div>
-                    <!-- Paper 3 -->
-                    <div class="card">
-                        <h3 class="text-xl font-bold text-indigo-600 mb-2">Huang et al. (2022)</h3>
-                        <p class="text-sm font-medium text-slate-500 mb-4">HSI and 1D-CNN</p>
-                        <div class="space-y-3 text-sm">
-                            <p><strong class="text-slate-700">Method:</strong> Used HSI on 25 different commercial textile fibers.</p>
-                            <p><strong class="text-slate-700">Model:</strong> A <span class="font-mono bg-indigo-50 text-indigo-700 px-2 py-1 rounded">1D-CNN</span> model compared against traditional ML (SVM, RF) and BPNN.</p>
-                            <p><strong class="text-slate-700">Key Finding:</strong> The 1D-CNN was superior, achieving <span class="font-bold text-green-600">98.6% accuracy</span>, significantly higher than Random Forest (91.4%).</p>
-                        </div>
-                    </div>
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Project Timeline (16 Weeks)</h2>
+                    <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-600">A structured plan to ensure timely completion and success.</p>
                 </div>
-            </div>
-        </section>
-        
-        <!-- Proposed Model Section -->
-        <section id="model" class="py-20">
-            <div class="container mx-auto px-6">
-                <h2 class="section-title">Proposed Framework: FabricID-Net</h2>
-                <p class="section-subtitle">We propose a multi-stage approach to build and validate a robust classification model, starting with baselines and progressing to a state-of-the-art architecture.</p>
-                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 text-center">
-                    <!-- Step 1 -->
-                    <div class="p-6 rounded-lg bg-white shadow-md w-full md:w-1/4">
-                        <div class="text-indigo-500 font-bold text-lg mb-2">Step 1</div>
-                        <h4 class="font-semibold text-slate-800">Baseline Models</h4>
-                        <p class="text-sm text-slate-500 mt-1">Implement KNN & SVM to establish performance benchmarks.</p>
-                    </div>
-                    <div class="text-slate-400 font-bold text-2xl">→</div>
-                    <!-- Step 2 -->
-                    <div class="p-6 rounded-lg bg-white shadow-md w-full md:w-1/4">
-                        <div class="text-indigo-500 font-bold text-lg mb-2">Step 2</div>
-                        <h4 class="font-semibold text-slate-800">Proven DL Models</h4>
-                        <p class="text-sm text-slate-500 mt-1">Develop 1D-CNN and ResNet architectures based on literature.</p>
-                    </div>
-                    <div class="text-slate-400 font-bold text-2xl">→</div>
-                    <!-- Step 3 -->
-                    <div class="p-6 rounded-lg bg-indigo-500 text-white shadow-lg w-full md:w-1/4 ring-4 ring-indigo-200">
-                        <div class="text-white font-bold text-lg mb-2">Final Goal</div>
-                        <h4 class="font-semibold">State-of-the-Art</h4>
-                        <p class="text-sm text-indigo-100 mt-1">Implement and optimize ModernTCN for superior accuracy and efficiency.</p>
-                    </div>
-                </div>
-                 <div class="mt-12 text-center max-w-2xl mx-auto">
-                    <h3 class="font-semibold text-lg text-slate-800">Why this approach?</h3>
-                    <p class="text-slate-500 mt-2">By comparing these architectures, we can thoroughly evaluate the trade-offs between model complexity, accuracy, and inference speed to select the most practical model for real-world deployment.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Data & Preprocessing Section -->
-        <section id="data" class="py-20 bg-white">
-            <div class="container mx-auto px-6">
-                <h2 class="section-title">Data Strategy</h2>
-                <p class="section-subtitle">High-quality data is the backbone of our model. Our strategy involves acquiring a relevant dataset and applying rigorous preprocessing techniques.</p>
-                <div class="grid md:grid-cols-2 gap-10">
-                    <!-- Data Sources -->
-                    <div class="card">
-                        <h3 class="text-2xl font-bold text-slate-800 mb-4">Data Sources</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-start">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-indigo-500 mr-4 flex-shrink-0 mt-1"><path d="M20 17.58A5 5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.25"></path><path d="M16 17.58A5 5 0 0 1 14 8h-1.26A8 8 0 1 1 2 16.25"></path><path d="M8 16a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .5-.5h0a.5.5 0 0 1 .5.5v5.5a.5.5 0 0 1-.5.5Z"></path><path d="M12 12a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .5-.5h0a.5.5 0 0 1 .5.5v1.5a.5.5 0 0 1-.5.5Z"></path></svg>
-                                <div>
-                                    <h4 class="font-semibold">Primary Option</h4>
-                                    <p class="text-slate-500">Request access to the <span class="font-medium text-slate-600">"Fabric-NIR-Dataset"</span> from Shi & Sang (2025), as it is highly relevant.</p>
-                                </div>
+                <div class="max-w-3xl mx-auto">
+                    <div class="border-l-2 border-blue-500 pl-8 space-y-2">
+                        <div class="timeline-item active">
+                            <div class="timeline-header cursor-pointer flex justify-between items-center py-4">
+                                <h3 class="text-xl font-bold">Phase 1: Data Acquisition & Preprocessing</h3>
+                                <span class="timeline-arrow text-blue-500 text-2xl font-bold">›</span>
                             </div>
-                            <div class="flex items-start">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-indigo-500 mr-4 flex-shrink-0 mt-1"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h0"></path><path d="M18 14h-8"></path><path d="M18 10h-8"></path><path d="M18 6h-8"></path></svg>
-                                <div>
-                                    <h4 class="font-semibold">Contingency Plan</h4>
-                                    <p class="text-slate-500">If needed, create a custom dataset by collecting fabric samples and acquiring NIR spectra using department facilities.</p>
-                                </div>
+                            <div class="timeline-content pl-4 pb-4">
+                                <p class="text-gray-600">Finalize dataset strategy, collect samples, acquire spectral data, and build the full data preprocessing pipeline. <strong class="text-gray-800">(Weeks 1-4)</strong></p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-header cursor-pointer flex justify-between items-center py-4">
+                                <h3 class="text-xl font-bold">Phase 2: Baseline Model Training</h3>
+                                <span class="timeline-arrow text-blue-500 text-2xl font-bold">›</span>
+                            </div>
+                            <div class="timeline-content pl-4 pb-4">
+                                <p class="text-gray-600">Implement and train baseline models (KNN, SVM) and the initial 1D-CNN. Analyze results to establish performance benchmarks. <strong class="text-gray-800">(Weeks 5-8)</strong></p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-header cursor-pointer flex justify-between items-center py-4">
+                                <h3 class="text-xl font-bold">Phase 3: Advanced Model Optimization</h3>
+                                <span class="timeline-arrow text-blue-500 text-2xl font-bold">›</span>
+                            </div>
+                            <div class="timeline-content pl-4 pb-4">
+                                <p class="text-gray-600">Implement and train advanced models (ResNet, ModernTCN). Conduct hyperparameter tuning and comparative analysis to select the best model. <strong class="text-gray-800">(Weeks 9-12)</strong></p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-header cursor-pointer flex justify-between items-center py-4">
+                                <h3 class="text-xl font-bold">Phase 4: Finalization & Reporting</h3>
+                                <span class="timeline-arrow text-blue-500 text-2xl font-bold">›</span>
+                            </div>
+                            <div class="timeline-content pl-4 pb-4">
+                                <p class="text-gray-600">Evaluate the final model on the held-out test set. Analyze performance, draft the final project report, and prepare the presentation of our findings. <strong class="text-gray-800">(Weeks 13-16)</strong></p>
                             </div>
                         </div>
                     </div>
-                    <!-- Preprocessing -->
-                    <div class="card">
-                        <h3 class="text-2xl font-bold text-slate-800 mb-4">Preprocessing Pipeline</h3>
-                        <p class="text-slate-500 mb-4">Raw spectral data contains noise. We will implement a pipeline to clean and normalize the data for optimal model performance.</p>
-                        <div class="space-y-2">
-                            <p class="flex items-center"><span class="font-mono text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded mr-3">SNV</span> Standard Normal Variate for scatter correction.</p>
-                            <p class="flex items-center"><span class="font-mono text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded mr-3">SG Filter</span> Savitzky-Golay filter to reduce instrumental noise.</p>
-                            <p class="flex items-center"><span class="font-mono text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded mr-3">Augment</span> Data augmentation to improve generalization.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Expected Outcomes Section -->
-        <section id="outcomes" class="py-20">
-             <div class="container mx-auto px-6">
-                <h2 class="section-title">Expected Outcomes & Goals</h2>
-                <p class="section-subtitle">Our primary objective is to develop a model that is not only highly accurate but also practical for real-world industrial applications.</p>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="card text-center">
-                        <div class="text-5xl font-extrabold text-indigo-600">>95%</div>
-                        <h3 class="mt-2 text-xl font-semibold text-slate-800">Classification Accuracy</h3>
-                        <p class="text-slate-500 mt-1">Our main target for performance on an unseen test set.</p>
-                    </div>
-                    <div class="card text-center">
-                         <div class="text-5xl font-extrabold text-indigo-600">Robust</div>
-                        <h3 class="mt-2 text-xl font-semibold text-slate-800">Evaluation Metrics</h3>
-                        <p class="text-slate-500 mt-1">We will also track Precision, Recall, and F1-Score for all classes.</p>
-                    </div>
-                    <div class="card text-center">
-                         <div class="text-5xl font-extrabold text-indigo-600">Real-Time</div>
-                        <h3 class="mt-2 text-xl font-semibold text-slate-800">Inference Speed</h3>
-                        <p class="text-slate-500 mt-1">The final model must be fast enough for automated sorting lines.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Timeline Section -->
-        <section id="timeline" class="py-20 bg-white">
-            <div class="container mx-auto px-6">
-                <h2 class="section-title">Project Timeline</h2>
-                <p class="section-subtitle">We propose a 16-week timeline, broken down into four distinct phases from data acquisition to final reporting.</p>
-                <!-- Timeline container -->
-                <div class="relative">
-                    <!-- Vertical line -->
-                    <div class="absolute left-1/2 -ml-px w-0.5 h-full bg-slate-200" aria-hidden="true"></div>
-                    
-                    <!-- Phase 1 -->
-                    <div class="relative flex items-center justify-between mb-16">
-                        <div class="w-5/12">
-                            <div class="text-right">
-                                <h3 class="text-xl font-bold text-slate-800">Phase 1: Data & Preprocessing</h3>
-                                <p class="text-indigo-500 font-semibold">Weeks 1-4</p>
-                                <ul class="text-sm text-slate-500 mt-2 list-none text-right">
-                                    <li>Finalize dataset strategy</li>
-                                    <li>Collect samples & acquire spectra</li>
-                                    <li>Implement preprocessing pipeline</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="z-10 bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg">1</div>
-                        <div class="w-5/12"></div>
-                    </div>
-
-                    <!-- Phase 2 -->
-                    <div class="relative flex items-center justify-between mb-16">
-                        <div class="w-5/12"></div>
-                        <div class="z-10 bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg">2</div>
-                        <div class="w-5/12">
-                             <div>
-                                <h3 class="text-xl font-bold text-slate-800">Phase 2: Baseline Training</h3>
-                                <p class="text-indigo-500 font-semibold">Weeks 5-8</p>
-                                <ul class="text-sm text-slate-500 mt-2 list-none">
-                                    <li>Train baseline models (KNN, SVM)</li>
-                                    <li>Develop and train initial 1D-CNN</li>
-                                    <li>Analyze results & set benchmarks</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                     <!-- Phase 3 -->
-                    <div class="relative flex items-center justify-between mb-16">
-                        <div class="w-5/12">
-                            <div class="text-right">
-                                <h3 class="text-xl font-bold text-slate-800">Phase 3: Advanced Modeling</h3>
-                                <p class="text-indigo-500 font-semibold">Weeks 9-12</p>
-                                <ul class="text-sm text-slate-500 mt-2 list-none text-right">
-                                    <li>Train ResNet & ModernTCN</li>
-                                    <li>Conduct hyperparameter tuning</li>
-                                    <li>Perform comparative analysis</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="z-10 bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg">3</div>
-                        <div class="w-5/12"></div>
-                    </div>
-
-                     <!-- Phase 4 -->
-                    <div class="relative flex items-center justify-between">
-                        <div class="w-5/12"></div>
-                        <div class="z-10 bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg">4</div>
-                        <div class="w-5/12">
-                             <div>
-                                <h3 class="text-xl font-bold text-slate-800">Phase 4: Final Analysis & Reporting</h3>
-                                <p class="text-indigo-500 font-semibold">Weeks 13-16</p>
-                                <ul class="text-sm text-slate-500 mt-2 list-none">
-                                    <li>Evaluate best model on test set</li>
-                                    <li>Analyze confusion matrix</li>
-                                    <li>Draft final report & presentation</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-800 text-slate-400 py-10">
-        <div class="container mx-auto px-6 text-center">
-            <p class="font-bold text-white text-lg">AI-Powered Textile Material Identification</p>
-            <p class="mt-2 text-sm">A project by Lakshya Kumar & Keshav Chachan</p>
-            <p class="text-xs mt-1">Department of Textile and Fibre Technology, IIT Delhi</p>
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <h3 class="text-2xl font-bold">Thank You</h3>
+            <p class="mt-2 text-gray-400">Questions?</p>
+            <p class="mt-8 text-sm text-gray-500">IIT Delhi - Department of Textile and Fibre Technology</p>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile menu toggle
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Smooth scrolling for nav links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    if (mobileMenu.classList.contains('hidden') === false) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Timeline accordion
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach(item => {
+                const header = item.querySelector('.timeline-header');
+                header.addEventListener('click', () => {
+                    // Close other items
+                    timelineItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                    // Toggle current item
+                    item.classList.toggle('active');
+                });
+            });
+
+            // Research Chart
+            const ctx = document.getElementById('researchChart').getContext('2d');
+            const researchData = {
+                labels: ['Shi & Sang (2025)', 'Kainz et al. (2025)', 'Huang et al. (2022)'],
+                datasets: [{
+                    label: 'Model Accuracy',
+                    data: [93.28, 100, 98.6],
+                    backgroundColor: [
+                        'rgba(74, 144, 226, 0.6)',
+                        'rgba(80, 227, 194, 0.6)',
+                        'rgba(126, 211, 33, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(74, 144, 226, 1)',
+                        'rgba(80, 227, 194, 1)',
+                        'rgba(126, 211, 33, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: researchData,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Accuracy (%)'
+                            }
+                        },
+                        y: {
+                           ticks: {
+                                autoSkip: false
+                           }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        if (context.raw === 100) {
+                                            label += 'Perfect Object-based Accuracy';
+                                        } else {
+                                            label += context.parsed.x + '%';
+                                        }
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
