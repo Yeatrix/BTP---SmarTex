@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Proposal: AI-Powered Textile Identification</title>
     <!-- Chosen Palette: Scholarly Neutrals -->
-    <!-- Application Structure Plan: The SPA uses a thematic, non-linear structure with a top navigation bar (Home, The Challenge, Our Solution, Research & Plan, Timeline, Citations) to allow users to jump to sections of interest. This is more user-friendly than a linear slide presentation. The design uses interactive cards for problems/solutions, a bar chart for research comparison, a visual flow diagram for the proposed model, and a clickable timeline. This structure is chosen to break down the proposal into digestible, engaging chunks, facilitating better understanding and exploration of the project's key components. -->
+    <!-- Application Structure Plan: The SPA uses a thematic, non-linear structure with a top navigation bar (Home, The Challenge, Our Solution, Literature Review, Timeline, Citations) to allow users to jump to sections of interest. This is more user-friendly than a linear slide presentation. The design uses interactive cards for problems/solutions, a bar chart for research comparison, a visual flow diagram for the proposed model, and a clickable timeline. This structure is chosen to break down the proposal into digestible, engaging chunks, facilitating better understanding and exploration of the project's key components. -->
     <!-- Visualization & Content Choices: 1. Literature Review -> Goal: Compare -> Viz: Horizontal Bar Chart (Chart.js) -> Interaction: Hover tooltips -> Justification: Directly compares key accuracy metrics visually. 2. Proposed Framework -> Goal: Organize -> Viz: HTML/CSS Flow Diagram + Image -> Interaction: Hover for details -> Justification: Clarifies the multi-stage plan better than text and shows the specific architecture. 3. Timeline -> Goal: Change/Process -> Viz: Interactive Accordion/Collapsible List -> Interaction: Click to expand/collapse phases -> Justification: Saves space and focuses user attention. 4. Problems/Solutions -> Goal: Inform -> Viz: Styled Cards with Unicode Icons -> Interaction: Hover effects -> Justification: More engaging and scannable than bullet points. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -62,12 +62,12 @@
     <header class="bg-white/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 shadow-md">
         <div class="container mx-auto px-6 py-3">
             <div class="flex justify-between items-center">
-                <div class="text-xl font-bold text-gray-800">FabricID-Net</div>
+                <div class="text-xl font-bold text-gray-800">Progress Report</div>
                 <nav class="hidden md:flex space-x-8">
                     <a href="#home" class="nav-link text-gray-600">Home</a>
                     <a href="#challenge" class="nav-link text-gray-600">The Challenge</a>
                     <a href="#solution" class="nav-link text-gray-600">Our Solution</a>
-                    <a href="#plan" class="nav-link text-gray-600">Research & Plan</a>
+                    <a href="#plan" class="nav-link text-gray-600">Literature Review</a>
                     <a href="#timeline" class="nav-link text-gray-600">Timeline</a>
                     <a href="#citations" class="nav-link text-gray-600">Citations</a>
                 </nav>
@@ -82,7 +82,7 @@
             <a href="#home" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Home</a>
             <a href="#challenge" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">The Challenge</a>
             <a href="#solution" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Our Solution</a>
-            <a href="#plan" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Research & Plan</a>
+            <a href="#plan" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Literature Review</a>
             <a href="#timeline" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Timeline</a>
             <a href="#citations" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Citations</a>
         </div>
@@ -91,11 +91,11 @@
     <main>
         <section id="home" class="pt-24 md:pt-32 pb-16 bg-white">
             <div class="container mx-auto px-6 text-center">
-                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-gray-900">AI-Powered Textile Material Identification</h1>
-                <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">A project proposal to develop a fast, accurate, and non-destructive system for identifying textile materials using Artificial Intelligence.</p>
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-gray-900">Material Detection of Textile Fabrics using Machine Learning</h1>
+                <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">Weekly Progress</p>
                 <div class="mt-8">
                     <p class="text-sm font-medium text-gray-500">Presented By</p>
-                    <p class="mt-1 text-lg font-semibold text-gray-800">Lakshya Kumar (2022tt12183) & Keshav Chachan (2022tt12148)</p>
+                    <p class="mt-1 text-lg font-semibold text-gray-800">Lakshya Kumar (2022TT12183) &nbsp;&nbsp;|&nbsp;&nbsp; Keshav Chachan (2022TT12148)</p>
                     <p class="mt-1 text-md text-gray-500">Department of Textile and Fibre Technology, IIT Delhi</p>
                 </div>
             </div>
@@ -135,7 +135,7 @@
         <section id="solution" class="py-16 md:py-24 bg-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Our Solution: Why Artificial Intelligence?</h2>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Why Artificial Intelligence?</h2>
                     <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-600">AI provides a powerful, modern solution to overcome these limitations.</p>
                 </div>
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -166,12 +166,12 @@
         <section id="plan" class="py-16 md:py-24">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Research & Project Plan</h2>
-                    <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-600">Our plan is grounded in proven research and a structured, multi-stage development process.</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Literature Review</h2>
+                    <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-600">We have mentioned the key findings of our literature review below.</p>
                 </div>
 
                 <div class="mb-16">
-                    <h3 class="text-2xl font-bold text-center mb-8">What the Research Says: Key Findings</h3>
+                    <h3 class="text-2xl font-bold text-center mb-8">Findings</h3>
                     <div class="bg-white p-6 rounded-xl shadow-lg">
                         <p class="text-center text-gray-600 mb-4">Recent studies confirm the high potential of deep learning for textile classification. Here's a comparison of key results from the literature.</p>
                         <div class="chart-container">
@@ -181,26 +181,42 @@
                 </div>
 
                 <div class="mb-16">
-                    <h3 class="text-2xl font-bold text-center mb-8">Proposed Framework: FabricID-Net</h3>
+                    <h3 class="text-2xl font-bold text-center mb-8">Proposed Models</h3>
                     <div class="flex flex-col md:flex-row items-stretch justify-center gap-4 text-center">
                         <div class="card bg-white p-6 rounded-lg shadow-md w-full md:w-1/3 flex flex-col">
                             <div class="text-blue-500 font-bold text-lg mb-2">1. Baselines</div>
-                            <p class="text-gray-700">Implement traditional models like **KNN & SVM** to set a performance benchmark.</p>
+                            <p class="text-gray-700">Implement traditional models like <b>KNN & SVM</b> to set a performance benchmark.</p>
                         </div>
                         <div class="text-2xl text-gray-400 font-bold mx-2 hidden md:flex items-center">→</div>
                         <div class="card bg-white p-6 rounded-lg shadow-md w-full md:w-1/3 flex flex-col">
                             <div class="text-green-500 font-bold text-lg mb-2">2. Proven Architectures</div>
-                            <p class="text-gray-700">Train robust deep learning models like **1D-CNN & ResNet**.</p>
+                            <p class="text-gray-700">Train robust deep learning models like <b>1D-CNN & ResNet</b>.</p>
                         </div>
                         <div class="text-2xl text-gray-400 font-bold mx-2 hidden md:flex items-center">→</div>
                         <div class="card bg-white p-6 rounded-lg shadow-md w-full md:w-1/3 flex flex-col">
                             <div class="text-purple-500 font-bold text-lg mb-2">3. State-of-the-Art</div>
-                            <p class="text-gray-700 flex-grow">Optimize a **ModernTCN** model for the best balance of accuracy and efficiency.</p>
-                            <img src="https://storage.googleapis.com/gemini-prod-us-east1-1p-20240508-100539-93457582/image_53d75b.png" alt="Fabric-ModernTCN Architecture Diagram" class="mt-4 rounded-lg shadow-inner bg-gray-100 p-1">
+                            <p class="text-gray-700 flex-grow">Optimize a <b>ModernTCN</b> model for the best balance of accuracy and efficiency.</p>
                         </div>
                     </div>
                 </div>
                 
+                <div class="mb-16">
+                    <div class="text-center mb-12">
+                        <h3 class="text-2xl font-bold text-gray-900">ModernTCN Model Architecture</h3>
+                        <p class="mt-3 max-w-3xl mx-auto text-lg text-gray-600">
+                            Model: ModernTCN <br>
+                            Dataset: a raw near-infrared spectral dataset including
+                            the spectra of 18 categories of fabrics consisting of 11,147 sample<br>
+                            Preprocessing:  standard
+ normal variate transformation, SG smoothing, min–max normalization, and arPLS baseline correction
+                        </p>
+                    </div>
+                    <div class="max-w-5xl mx-auto bg-gray-50 p-4 sm:p-6 md:p-8 rounded-xl shadow-lg border border-gray-200">
+                        <img src="images/modernTCN.jpg" alt="Fabric ModernTCN Architecture"class="w-full h-auto rounded-lg shadow-md">
+                        <p class="text-center mt-4 text-sm text-gray-500">Fig 1. The structural diagrams of Fabric-ModernTCN (a), its Backbone (b), and its constituent ModernTCN Block (c). Source: Shi & Sang (2025).</p>
+                    </div>
+                </div>
+
                 <div class="grid md:grid-cols-2 gap-8">
                     <div class="bg-white p-8 rounded-xl shadow-lg">
                         <h3 class="text-2xl font-bold mb-4">Data Collection & Preparation</h3>
@@ -208,15 +224,15 @@
                         <ul class="space-y-3">
                             <li class="flex items-start">
                                 <span class="text-blue-500 mr-3 mt-1">✓</span>
-                                <span>First, request access to the **"Fabric-NIR-Dataset"** (11,000+ samples) from published research.</span>
+                                <span>First, request access to the <b>"Fabric-NIR-Dataset"</b> (11,000+ samples) from published research.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-blue-500 mr-3 mt-1">✓</span>
-                                <span>As a backup, **create our own dataset** using the department's NIR spectrometer.</span>
+                                <span>Else, we might need to <b>create our own dataset</b>.</span>
                             </li>
                              <li class="flex items-start">
                                 <span class="text-blue-500 mr-3 mt-1">✓</span>
-                                <span>Clean and enhance data via **Normalization (SNV)** and **Smoothing (SG Filter)**.</span>
+                                <span>Clean and enhance data via <b>Normalization (SNV)</b> and <b>Smoothing (SG Filter)</b>.</span>
                             </li>
                         </ul>
                     </div>
@@ -224,9 +240,9 @@
                         <h3 class="text-2xl font-bold mb-4">Expected Outcomes & Metrics</h3>
                         <p class="text-gray-600 mb-4">Our goal is a practical, high-performance model. Success will be measured by:</p>
                         <div class="text-center">
-                            <div class="text-5xl font-extrabold text-blue-600 mb-2">>95%</div>
+                            <div class="text-5xl font-extrabold text-blue-600 mb-2">>90%</div>
                             <div class="text-xl font-bold mb-4">Classification Accuracy</div>
-                            <p class="text-gray-600">Along with **Precision, Recall, F1-Score**, and **real-time inference speed** for industrial viability.</p>
+                            <p class="text-gray-600">Along with <b>Precision, Recall, F1-Score</b>, and <b>real-time inference speed</b> for industrial viability.</p>
                         </div>
                     </div>
                 </div>
@@ -236,7 +252,7 @@
         <section id="timeline" class="py-16 md:py-24 bg-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Project Timeline (16 Weeks)</h2>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Project Timeline</h2>
                     <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-600">A structured plan to ensure timely completion and success.</p>
                 </div>
                 <div class="max-w-3xl mx-auto">
@@ -349,10 +365,10 @@
             // Research Chart
             const ctx = document.getElementById('researchChart').getContext('2d');
             const researchData = {
-                labels: ['Shi & Sang (2025)', 'Kainz et al. (2025)', 'Huang et al. (2022)'],
+                labels: ['C. Shi and J. Sang', 'Kainz et al. (2025)', 'Huang et al. (2022)'],
                 datasets: [{
                     label: 'Model Accuracy',
-                    data: [93.28, 100, 98.6],
+                    data: [93.28, 98.6, 91.2],
                     backgroundColor: [
                         'rgba(74, 144, 226, 0.6)',
                         'rgba(80, 227, 194, 0.6)',
